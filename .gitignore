@@ -1,0 +1,4 @@
+test.py
+app/__pycache__/
+run.sh
+docker-compose-mel.yml

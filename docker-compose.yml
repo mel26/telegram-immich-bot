@@ -1,0 +1,11 @@
+---
+services:
+  telegram-immich-bot:
+    container_name: telegram-immich-bot
+    environment:
+      - IMMICH_API_URL=https://your-immich/api
+      - IMMICH_API_KEY=xxxxxxxxxx
+      - TELEGRAM_BOT_TOKEN=xxx:xxxxx
+      - ALLOWED_USER_IDS=123456789
+      - UPLOAD_TIMEZONE=Europe/Moscow
+    image: telegram-immich-bot
