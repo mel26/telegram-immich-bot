@@ -127,7 +127,7 @@ async def add_asset_to_album(asset_id: str, album_id: str, update: Update, conte
         json=data
     )
     
-    if response.status_code not in (200, 201):
+    if response.status_code in (200, 201):
         logger.info(f"Successfully added asset {asset_id} to album {album_id}")
         #await update.message.reply_text(f"✅ Asset added to album successfully!")
         #not necessary to notify

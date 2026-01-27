@@ -26,11 +26,18 @@ async def send_startup_message(application: Application):
     """Send startup message to all allowed users when container starts."""
     immich_status, user_info = await immich.get_immich_status()
 
+    album_message = (
+        f"Selected album: {config.IMMICH_SELECTED_ALBUM_NAME}\n\n"
+        if config.IMMICH_SELECTED_ALBUM
+        else
+        "No album selected. Assets will be uploaded to the default library.\n\n"
+    )
+
     startup_message = (
         f"🤖 {config.BOT_NAME} v{config.BOT_VERSION} has started!\n\n"
         f"{immich_status}\n"
         f"Logged in as {user_info}\n\n"
-        f"Selected album: {config.IMMICH_SELECTED_ALBUM_NAME}\n\n"
+        f"{album_message}"
         "Bot is ready to receive your files."
     )
 
@@ -142,7 +149,7 @@ async def handle_tg_media(update: Update, context: ContextTypes.DEFAULT_TYPE, me
             return
 
         asset_id = await immich.upload_to_immich(temp_file_path, update, context)
-        if asset_id:
+        if asset_id and config.IMMICH_SELECTED_ALBUM:
             await immich.add_asset_to_album(asset_id, config.IMMICH_SELECTED_ALBUM, update, context)
 
     except Exception as e:

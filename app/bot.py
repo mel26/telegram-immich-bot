@@ -15,24 +15,25 @@ def main():
 
         application = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
                 
-        album_name = "Unknown Album"
-        try:
-            import requests
-            response = requests.get(
-                f"{config.IMMICH_API_URL}/albums/{config.IMMICH_SELECTED_ALBUM}?withoutAssets=true",
-                headers={'x-api-key': config.IMMICH_API_KEY},
-                timeout=5
-            )
-            if response.status_code == 200:
-                album_data = response.json()
-                album_name = album_data.get('albumName', 'Unknown Album')
-            else:
-                logger.error(f"Failed to get album name (HTTP {response.status_code})")
+        album_name = ""
+        if config.IMMICH_SELECTED_ALBUM:
+            try:
+                import requests
+                response = requests.get(
+                    f"{config.IMMICH_API_URL}/albums/{config.IMMICH_SELECTED_ALBUM}?withoutAssets=true",
+                    headers={'x-api-key': config.IMMICH_API_KEY},
+                    timeout=5
+                )
+                if response.status_code == 200:
+                    album_data = response.json()
+                    album_name = album_data.get('albumName', 'Unknown Album')
+                else:
+                    logger.error(f"Failed to get album name (HTTP {response.status_code})")
+                    return
+            except Exception as e:
+                logger.error(f"Failed to get album name: {e}")
                 return
-        except Exception as e:
-            logger.error(f"Failed to get album name: {e}")
-            return
-        config.IMMICH_SELECTED_ALBUM_NAME = album_name
+            config.IMMICH_SELECTED_ALBUM_NAME = album_name
                 
         application.add_handler(CommandHandler("start",                 tg_handlers.start))
         application.add_handler(CommandHandler("help",                  tg_handlers.help_command))
