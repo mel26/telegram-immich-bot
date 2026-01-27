@@ -4,6 +4,7 @@ from zoneinfo import ZoneInfo
 
 IMMICH_API_URL = os.getenv("IMMICH_API_URL")
 IMMICH_API_KEY = os.getenv("IMMICH_API_KEY")
+IMMICH_SELECTED_ALBUM = os.getenv("IMMICH_SELECTED_ALBUM")
 
 UPLOAD_TIMEZONE = ZoneInfo(os.getenv("UPLOAD_TIMEZONE", "Europe/Moscow"))
 
@@ -43,5 +44,7 @@ def validate_config():
         missing_vars.append("IMMICH_API_URL")
     if not ALLOWED_USER_IDS:
         missing_vars.append("ALLOWED_USER_IDS")
+    if not IMMICH_SELECTED_ALBUM:
+        missing_vars.append("IMMICH_SELECTED_ALBUM")
     if missing_vars:
         raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
