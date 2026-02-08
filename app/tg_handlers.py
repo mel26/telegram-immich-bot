@@ -48,7 +48,7 @@ async def send_startup_message(application: Application):
 # -------------------------------------------------------------------------
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Send a help message with Immich connection status."""
-    immich_status, user_info = await get_immich_status()
+    immich_status, user_info = await immich.get_immich_status()
 
     help_message = (
         f"ℹ️ {config.BOT_NAME} v{config.BOT_VERSION}\n\n"
