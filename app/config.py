@@ -4,6 +4,8 @@ from zoneinfo import ZoneInfo
 
 IMMICH_API_URL = os.getenv("IMMICH_API_URL")
 IMMICH_API_KEY = os.getenv("IMMICH_API_KEY")
+IMMICH_SELECTED_ALBUM = os.getenv("IMMICH_SELECTED_ALBUM")
+IMMICH_SELECTED_ALBUM_NAME = ""
 
 UPLOAD_TIMEZONE = ZoneInfo(os.getenv("UPLOAD_TIMEZONE", "Europe/Moscow"))
 

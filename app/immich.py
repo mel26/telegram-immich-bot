@@ -108,4 +108,30 @@ async def upload_to_immich(filename: str, update: Update, context: ContextTypes.
         
         logger.info(f"Successfully uploaded asset {device_asset_id} to Immich")
         await update.message.reply_text(f"✅ Asset uploaded successfully!")
+        
+        return response_data.get('id') or None
             
+async def add_asset_to_album(asset_id: str, album_id: str, update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Add uploaded asset to specified Immich album."""
+    
+    headers = {
+        'x-api-key': config.IMMICH_API_KEY,
+    }
+    data = {
+        'albumIds': [album_id],
+        'assetIds': [asset_id]
+    }
+    response = requests.put(
+        f"{config.IMMICH_API_URL}/albums/assets",
+        headers=headers,
+        json=data
+    )
+    
+    if response.status_code in (200, 201):
+        logger.info(f"Successfully added asset {asset_id} to album {album_id}")
+        #await update.message.reply_text(f"✅ Asset added to album successfully!")
+        #not necessary to notify
+    else:
+        logger.error(f"Failed to add asset {asset_id} to album {album_id}. Status code: {response.status_code}, Response: {response.text}")
+        await update.message.reply_text(f"❌ Failed to add asset to album. Error: {response.text}")
+    return
