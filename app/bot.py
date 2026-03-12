@@ -1,8 +1,7 @@
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
+from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import logging
 import asyncio
-
 import tg_handlers
 import config
 
