@@ -5,7 +5,7 @@ import utils
 import os
 
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
+from telegram.ext import ContextTypes
 
 logger = logging.getLogger(__name__)
 
@@ -110,6 +110,24 @@ async def upload_to_immich(filename: str, update: Update, context: ContextTypes.
         await update.message.reply_text(f"✅ Asset uploaded successfully!")
         
         return response_data.get('id') or None
+    
+async def get_album_name(album_id: str):
+    """Get album name by ID."""
+    try:
+        response = requests.get(
+            f"{config.IMMICH_API_URL}/albums/{album_id}?withoutAssets=true",
+            headers={'x-api-key': config.IMMICH_API_KEY},
+            timeout=5
+        )
+        if response.status_code == 200:
+            album_data = response.json()
+            return album_data.get('albumName', 'Unknown Album')
+        else:
+            logger.error(f"Failed to get album name (HTTP {response.status_code})")
+            return "Unknown Album"
+    except Exception as e:
+        logger.error(f"Failed to get album name: {e}")
+        return "Unknown Album"
             
 async def add_asset_to_album(asset_id: str, album_id: str, update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Add uploaded asset to specified Immich album."""

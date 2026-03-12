@@ -4,10 +4,10 @@ import utils
 import os
 import immich
 
-from enum import Enum, auto
+from enum import Enum
 
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
+from telegram.ext import Application, ContextTypes
 
 class TG_MediaType(Enum):
     MEDIA_PHOTO =    1
@@ -26,8 +26,11 @@ async def send_startup_message(application: Application):
     """Send startup message to all allowed users when container starts."""
     immich_status, user_info = await immich.get_immich_status()
 
+    if config.IMMICH_SELECTED_ALBUM:
+        album_name = await immich.get_album_name(config.IMMICH_SELECTED_ALBUM)
+
     album_message = (
-        f"Selected album: {config.IMMICH_SELECTED_ALBUM_NAME}\n\n"
+        f"Selected album: {album_name}\n\n"
         if config.IMMICH_SELECTED_ALBUM
         else
         "No album selected. Assets will be uploaded to the default library.\n\n"
