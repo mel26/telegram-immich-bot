@@ -7,6 +7,8 @@ IMMICH_API_KEY = os.getenv("IMMICH_API_KEY")
 
 UPLOAD_TIMEZONE = ZoneInfo(os.getenv("UPLOAD_TIMEZONE", "Europe/Moscow"))
 
+TELEGRAM_BOT_PROXY = os.getenv("TELEGRAM_BOT_PROXY")
+
 BOT_NAME = "Telegram to Immich Bot"
 BOT_VERSION = "0.7"
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
