@@ -12,7 +12,10 @@ def main():
     try:
         config.validate_config()
 
-        application = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
+        if (not config.TELEGRAM_BOT_PROXY):
+            application = Application.builder().token(config.TELEGRAM_BOT_TOKEN).build()
+        else:
+            application = Application.builder().token(config.TELEGRAM_BOT_TOKEN).proxy(config.TELEGRAM_BOT_PROXY).get_updates_proxy(config.TELEGRAM_BOT_PROXY).build()
 
         application.add_handler(CommandHandler("start",                 tg_handlers.start))
         application.add_handler(CommandHandler("help",                  tg_handlers.help_command))

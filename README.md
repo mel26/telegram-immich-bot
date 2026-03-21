@@ -58,3 +58,4 @@ docker compose up -d
 | ALLOWED_USER_IDS | ✅ | Comma-separated list of Telegram user IDs allowed to use the bot (e.g., `123456789,987654321`) | - |
 | UPLOAD_TIMEZONE | - | Time zone to be set for an asset after upload | Europe/Moscow |
 | IMMICH_SELECTED_ALBUM | - | Immich album UUID, that assets will get added to. | - |
+| TELEGRAM_BOT_PROXY | - | Socks5 proxy to connect to Telegram API in format socks5[h]://user:pass@host:port | - |
