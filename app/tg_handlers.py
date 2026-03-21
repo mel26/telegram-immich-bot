@@ -4,10 +4,10 @@ import utils
 import os
 import immich
 
-from enum import Enum, auto
+from enum import Enum
 
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
+from telegram.ext import Application, ContextTypes
 
 class TG_MediaType(Enum):
     MEDIA_PHOTO =    1
@@ -26,10 +26,21 @@ async def send_startup_message(application: Application):
     """Send startup message to all allowed users when container starts."""
     immich_status, user_info = await immich.get_immich_status()
 
+    if config.IMMICH_SELECTED_ALBUM:
+        album_name = await immich.get_album_name(config.IMMICH_SELECTED_ALBUM)
+
+    album_message = (
+        f"Selected album: {album_name}\n\n"
+        if config.IMMICH_SELECTED_ALBUM
+        else
+        "No album selected. Assets will be uploaded to the default library.\n\n"
+    )
+
     startup_message = (
         f"🤖 {config.BOT_NAME} v{config.BOT_VERSION} has started!\n\n"
         f"{immich_status}\n"
         f"Logged in as {user_info}\n\n"
+        f"{album_message}"
         "Bot is ready to receive your files."
     )
 
@@ -140,7 +151,9 @@ async def handle_tg_media(update: Update, context: ContextTypes.DEFAULT_TYPE, me
             await update.message.reply_text("❌ Failed to download file.")
             return
 
-        await immich.upload_to_immich(temp_file_path, update, context)
+        asset_id = await immich.upload_to_immich(temp_file_path, update, context)
+        if asset_id and config.IMMICH_SELECTED_ALBUM:
+            await immich.add_asset_to_album(asset_id, config.IMMICH_SELECTED_ALBUM, update, context)
 
     except Exception as e:
         logger.error(f"Error processing file {file_name}: {str(e)}", exc_info=True)
